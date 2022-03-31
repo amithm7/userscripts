@@ -1,0 +1,80 @@
+// ==UserScript==
+// @name         YouTube Video Save To Playlist Search
+// @namespace    https://amo.fyi/
+// @version      1.0
+// @description  Adds a Search field for YouTube Video's Save To playlists.
+// @author       Amith M
+// @match        *://www.youtube.com/*
+// ==/UserScript==
+
+"use strict";
+
+let checkTimeout = null;
+let checkRetries = 0;
+let checkInterval = 500;
+let checkMaxRetries = 6;
+
+let saveToHeader = null;
+let playlists = [];
+let playlistSearch = null;
+
+let initSearch = (q) => {
+	if (playlists.length === 0) return;
+
+	q = q.trim().toLowerCase();
+
+	playlists.forEach((playlist) => {
+		let name = playlist.innerText.toLowerCase();
+
+		if (name.indexOf(q) === -1)
+			playlist.style.display = "none";
+		else
+			playlist.style.display = "";
+	});
+};
+
+let scheduleCheckAgain = () => {
+	checkRetries++;
+
+	clearTimeout(checkTimeout);
+	if (checkRetries < checkMaxRetries)
+		checkTimeout = setTimeout(checkSaveToWindow, checkInterval);
+	else
+		checkRetries = 0;
+}
+
+let checkSaveToWindow = () => {
+	saveToHeader = document.querySelector(
+		"div#title.ytd-add-to-playlist-renderer"
+	);
+
+	// first click of "Save" btn, saveTo window is added to DOM.
+	// subsequent clicks, it may not be rendered / visible.
+	// In both cases, rendering takes time. So, check a few times.
+	if (!saveToHeader || !saveToHeader.offsetHeight) {
+		scheduleCheckAgain();
+		return;
+	}
+
+	playlists = document.querySelectorAll(
+		"ytd-playlist-add-to-option-renderer"
+	);
+
+	if (playlistSearch) {
+		playlistSearch.select();
+		return;
+	}
+
+	playlistSearch = document.createElement("input");
+	playlistSearch.id = "playlist-search";
+	playlistSearch.type = "search";
+	saveToHeader.appendChild(playlistSearch);
+
+	playlistSearch.addEventListener("keyup", (e) =>
+		initSearch(e.target.value)
+	);
+
+	playlistSearch.focus();
+};
+
+document.addEventListener("click", checkSaveToWindow);
