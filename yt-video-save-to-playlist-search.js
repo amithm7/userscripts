@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Video Save To Playlist Search
 // @namespace    https://amo.fyi/
-// @version      1.0
+// @version      1.1
 // @description  Adds a Search field for YouTube Video's Save To playlists.
 // @author       Amith M
 // @match        *://www.youtube.com/*
@@ -14,6 +14,7 @@ let checkRetries = 0;
 let checkInterval = 500;
 let checkMaxRetries = 6;
 
+let saveToWindow = null;
 let saveToHeader = null;
 let playlists = [];
 let playlistSearch = null;
@@ -41,9 +42,10 @@ let scheduleCheckAgain = () => {
 		checkTimeout = setTimeout(checkSaveToWindow, checkInterval);
 	else
 		checkRetries = 0;
-}
+};
 
 let checkSaveToWindow = () => {
+	saveToWindow = document.querySelector("ytd-add-to-playlist-renderer");
 	saveToHeader = document.querySelector(
 		"div#title.ytd-add-to-playlist-renderer"
 	);
@@ -75,6 +77,11 @@ let checkSaveToWindow = () => {
 	);
 
 	playlistSearch.focus();
+
+	// prevent clicks inside saveTo window from triggering focus of the search.
+	saveToWindow.addEventListener("click", (e) => {
+		e.stopPropagation();
+	});
 };
 
 document.addEventListener("click", checkSaveToWindow);
