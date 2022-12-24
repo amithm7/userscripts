@@ -67,6 +67,12 @@ let checkSaveToWindow = () => {
 		return;
 	}
 
+	saveToWindow
+		.querySelectorAll("#playlists #label.ytd-playlist-add-to-option-renderer")
+		.forEach((e) => {
+			e.setAttribute("style", "font-family: monospace !important");
+		});
+
 	playlistSearch = document.createElement("input");
 	playlistSearch.id = "playlist-search";
 	playlistSearch.type = "search";
