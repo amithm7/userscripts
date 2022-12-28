@@ -7,7 +7,9 @@
 // @match        https://*.ycombinator.com/*
 // ==/UserScript==
 
-for(let link of document.querySelectorAll('.titlelink')) {
+const links = document.querySelectorAll('.titleline > a');
+
+for(let link of links) {
 	const domain = new URL(link.href).hostname;
 	const imageUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
 	const image = document.createElement('img');
