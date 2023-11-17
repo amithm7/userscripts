@@ -11,7 +11,7 @@
 
 let checkTimeout = null;
 let checkRetries = 0;
-let checkInterval = 500;
+let checkInterval = 1000; // 1s
 let checkMaxRetries = 6;
 
 let saveToWindow = null;
@@ -47,7 +47,10 @@ let scheduleCheckAgain = () => {
 let checkSaveToWindow = () => {
 	saveToWindow = document.querySelector("ytd-add-to-playlist-renderer");
 	saveToHeader = document.querySelector(
-		"div#title.ytd-add-to-playlist-renderer"
+		"div#header.ytd-add-to-playlist-renderer"
+		// TODO: Work with new title element. Issue: Search Not visible in subsequent clicks
+		// "div#title.ytd-add-to-playlist-renderer"
+		// "div#header>.ytd-menu-title-renderer.ytd-add-to-playlist-renderer"
 	);
 
 	// first click of "Save" btn, saveTo window is added to DOM.
