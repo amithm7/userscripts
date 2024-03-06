@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         Instagram Video controls
 // @namespace    https://amo.fyi
-// @version      1.0
+// @version      1.1
 // @description  Show video controls on instagram
 // @author       Amith M
-// @match        https://www.instagram.com/*
+// @match        https://www.instagram.com/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=instagram.com
 // @grant        none
 // ==/UserScript==
+
+// TODO: Consider post pages `/p/*`
 
 (function() {
 	'use strict';
@@ -45,7 +47,10 @@
 	// Start observing the target node for configured mutations
 	observer.observe(
 		// Target Node: The node that will be observed for mutations
-		document.getElementsByTagName("main")[0],
+		// document.getElementsByTagName("main")[0],
+		// individual posts on the feed page are articles
+		// Excludes stories
+		document.getElementsByTagName("article")[0].parentElement,
 		// Options for the observer (which mutations to observe)
 		{ attributes: true, childList: true, subtree: true }
 	);
