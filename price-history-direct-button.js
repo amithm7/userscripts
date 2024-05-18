@@ -102,62 +102,62 @@
 		const HTMLElementContainer = document.querySelector(
 			site.CSSSelectorContainer
 		);
-		if (HTMLElementContainer) {
-			const URLStringPHRedirect =
-				"https://pricehistoryapp.com/redirect?p=" +
-				encodeURIComponent(
-					location.protocol +
-						"//" +
-						location.host +
-						location.pathname +
-						(site.code == "FK"
-							? "?pid=" + parseQuery(location.search).pid
-							: "")
-				);
-			console.log(URLStringPHRedirect);
 
-			// (site.code == "FK"
-			// 	? HTMLElementContainer.parentElement.parentElement
-			// 	: HTMLElementContainer
-			// ).insertAdjacentHTML("beforeend", site.HTMLStringBtnToPH);
-			// document.getElementById("toPriceHistoryBtn").onclick = () => {
-			// 	location.href = URLStringPHRedirect;
-			// };
-			(site.code == "FK"
-				? HTMLElementContainer.parentElement.parentElement
-				: HTMLElementContainer
-			).insertAdjacentHTML("beforeend", site.HTMLStringAnchorToPH);
-			document.getElementById("toPriceHistoryAnchor").href =
-				URLStringPHRedirect;
-		} else {
+		if (!HTMLElementContainer)
 			scheduleCheckAgain(() => tryAddRedirectBtn(site));
-		}
+
+		const URLStringPHRedirect =
+			"https://pricehistoryapp.com/redirect?p=" +
+			encodeURIComponent(
+				location.protocol +
+					"//" +
+					location.host +
+					location.pathname +
+					(site.code == "FK"
+						? "?pid=" + parseQuery(location.search).pid
+						: "")
+			);
+		console.log(URLStringPHRedirect);
+
+		// (site.code == "FK"
+		// 	? HTMLElementContainer.parentElement.parentElement
+		// 	: HTMLElementContainer
+		// ).insertAdjacentHTML("beforeend", site.HTMLStringBtnToPH);
+		// document.getElementById("toPriceHistoryBtn").onclick = () => {
+		// 	location.href = URLStringPHRedirect;
+		// };
+		(site.code == "FK"
+			? HTMLElementContainer.parentElement.parentElement
+			: HTMLElementContainer
+		).insertAdjacentHTML("beforeend", site.HTMLStringAnchorToPH);
+		document.getElementById("toPriceHistoryAnchor").href =
+			URLStringPHRedirect;
 	};
 
 	let initURLSearch = (productURL) => {
 		const PH_HTMLElementInputSearch = document.querySelector(
 			PH_CSSSelectorInSearch
 		);
-		if (PH_HTMLElementInputSearch) {
-			console.log("input URL");
 
-			// window.focus();
-			// priceHistorySearchIn.focus();
-			// document.querySelector("nav input").value="https://www.amazon.in/dp/B08V98F518/";
-			PH_HTMLElementInputSearch.value = productURL;
-			// priceHistorySearchIn.click();
-
-			PH_HTMLElementInputSearch.dispatchEvent(
-				new Event("input", {
-					bubbles: true,
-					cancelable: true,
-				})
-			);
-
-			document.querySelector(PH_CSSSelectorBtnSearch).click();
-		} else {
+		if (!PH_HTMLElementInputSearch)
 			scheduleCheckAgain(() => initURLSearch(productURL));
-		}
+
+		console.log("input URL");
+
+		// window.focus();
+		// priceHistorySearchIn.focus();
+		// document.querySelector("nav input").value="https://www.amazon.in/dp/B08V98F518/";
+		PH_HTMLElementInputSearch.value = productURL;
+		// priceHistorySearchIn.click();
+
+		PH_HTMLElementInputSearch.dispatchEvent(
+			new Event("input", {
+				bubbles: true,
+				cancelable: true,
+			})
+		);
+
+		document.querySelector(PH_CSSSelectorBtnSearch).click();
 	};
 
 	if (location.hostname == "www.amazon.in") {
@@ -169,8 +169,6 @@
 		location.pathname == "/redirect"
 	) {
 		// Using https://pricehistoryapp.com/redirect?p=PRODUCT_LINK
-		console.log(location.hostname + location.pathname);
-
 		initURLSearch(parseQuery(location.search).p);
 	}
 })();
