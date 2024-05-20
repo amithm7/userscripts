@@ -18,22 +18,6 @@
 
 	//#region helper-functions -------------------------------------------------
 
-	let checkTimeout = null;
-	let checkRetries = 0;
-	let checkInterval = 1000; // 1s
-	let checkMaxRetries = 60;
-
-	let scheduleCheckAgain = (checkFunction) => {
-		checkRetries++;
-
-		clearTimeout(checkTimeout);
-		if (checkRetries < checkMaxRetries) {
-			checkTimeout = setTimeout(checkFunction, checkInterval);
-		} else {
-			checkRetries = 0;
-		}
-	};
-
 	/**
 	 * @param {string} searchString URL search string like `?a=1&b=2`
 	 * @returns {object} { [query: value], ... }
@@ -103,9 +87,6 @@
 			site.CSSSelectorContainer
 		);
 
-		if (!HTMLElementContainer)
-			scheduleCheckAgain(() => tryAddRedirectBtn(site));
-
 		const URLStringPHRedirect =
 			"https://pricehistoryapp.com/redirect?p=" +
 			encodeURIComponent(
@@ -138,9 +119,6 @@
 		const PH_HTMLElementInputSearch = document.querySelector(
 			PH_CSSSelectorInSearch
 		);
-
-		if (!PH_HTMLElementInputSearch)
-			scheduleCheckAgain(() => initURLSearch(productURL));
 
 		console.log("input URL");
 
