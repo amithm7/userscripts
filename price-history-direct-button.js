@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PriceHistory Redirect Button
 // @namespace    https://amo.fyi
-// @version      1.0
+// @version      1.1
 // @description  Show PriceHistory Redirect (New Tab) Button on Amazon, Flipkart, etc
 // @author       Amith M
 // @match        https://www.amazon.in/*
@@ -38,6 +38,20 @@
 
 	//#endregion helper-functions ----------------------------------------------
 
+	const redirectBtnID = "toPriceHistoryAnchor";
+
+	/**
+	 * @typedef site
+	 * @type {Object}
+	 * @property {string} code - Shop site code
+	 * @property {string} CSSSelectorContainer - CSS selector
+	 * @property {string} HTMLStringBtnToPH - HTML String
+	 * @property {string} HTMLStringAnchorToPH - HTML String
+	 */
+
+	/**
+	 * @type {site}
+	 */
 	const AZ = {
 		code: "AZ",
 		// PriceBox Inside add to cart box, not always available
@@ -47,12 +61,12 @@
 		CSSSelectorContainer:
 			"#apex_desktop #corePriceDisplay_desktop_feature_div .a-section .a-price",
 		HTMLStringBtnToPH: `
-			<span id="toPriceHistoryBtn" class="a-button a-padding-mini">
+			<span id="${redirectBtnID}" class="a-button a-padding-mini">
 				<p class="" style="font-size: 0.5em;">History</p>
 			</span>
 			`,
 		HTMLStringAnchorToPH: `
-			<a id="toPriceHistoryAnchor" class="a-button a-padding-mini"
+			<a id="${redirectBtnID}" class="a-button a-padding-mini"
 				href="" target="_blank" rel="noreferrer" rel="noopener"
 				style="border: 2px solid yellowgreen; border-radius: 1em;">
 				<p class="" style="font-size: 0.5em;">History</p>
@@ -60,17 +74,20 @@
 			`,
 	};
 
+	/**
+	 * @type {site}
+	 */
 	const FK = {
 		code: "FK",
 		// PriceInfo
 		CSSSelectorContainer: "#price-info-icon",
 		HTMLStringBtnToPH: `
-			<button id="toPriceHistoryBtn" class="" style="padding: 0.2em 1em;font-size: 1.9em;margin: 0 1em;">
+			<button id="${redirectBtnID}" class="" style="padding: 0.2em 1em;font-size: 1.9em;margin: 0 1em;">
 				<p class="" style="font-size: 0.5em;">History</p>
 			</button>
 			`,
 		HTMLStringAnchorToPH: `
-			<a id="toPriceHistoryAnchor" class=""
+			<a id="${redirectBtnID}" class=""
 				href=""  target="_blank" rel="noreferrer" rel="noopener"
 				style="padding: 0.3em .3em;font-size: 1.9em;margin: 0 1em; border: 2px solid yellowgreen; border-radius: 1em;">
 				<p class="" style="font-size: 0.5em;">History</p>
@@ -81,8 +98,11 @@
 	const PH_CSSSelectorInSearch = "nav input";
 	const PH_CSSSelectorBtnSearch = 'nav button[title="Search Price History"]';
 
-	let tryAddRedirectBtn = (site) => {
-		console.log(`try add ${site.code}`);
+	/**
+	 * Compute redirect URL and add button to shop site
+	 * @param {site} site
+	 */
+	let renderBtn = (site) => {
 		const HTMLElementContainer = document.querySelector(
 			site.CSSSelectorContainer
 		);
@@ -104,15 +124,36 @@
 		// 	? HTMLElementContainer.parentElement.parentElement
 		// 	: HTMLElementContainer
 		// ).insertAdjacentHTML("beforeend", site.HTMLStringBtnToPH);
-		// document.getElementById("toPriceHistoryBtn").onclick = () => {
+		// document.getElementById("${redirectBtnID}").onclick = () => {
 		// 	location.href = URLStringPHRedirect;
 		// };
 		(site.code == "FK"
 			? HTMLElementContainer.parentElement.parentElement
 			: HTMLElementContainer
 		).insertAdjacentHTML("beforeend", site.HTMLStringAnchorToPH);
-		document.getElementById("toPriceHistoryAnchor").href =
-			URLStringPHRedirect;
+		document.getElementById(redirectBtnID).href = URLStringPHRedirect;
+	};
+
+	/**
+	 * @param {site} site
+	 */
+	let addRedirectBtnToSite = (site) => {
+		console.log(`try add ${site.code}`);
+
+		// Observe URL path change for color / type variations
+		let oldHref = location.href;
+		const observer = new MutationObserver((mutations) => {
+			if (oldHref !== location.href) {
+				oldHref = location.href;
+				renderBtn(site);
+			}
+		});
+		observer.observe(document.querySelector("body"), {
+			childList: true,
+			subtree: true,
+		});
+
+		renderBtn(site);
 	};
 
 	let initURLSearch = (productURL) => {
@@ -139,9 +180,9 @@
 	};
 
 	if (location.hostname == "www.amazon.in") {
-		tryAddRedirectBtn(AZ);
+		addRedirectBtnToSite(AZ);
 	} else if (location.hostname == "www.flipkart.com") {
-		tryAddRedirectBtn(FK);
+		addRedirectBtnToSite(FK);
 	} else if (
 		location.hostname == "pricehistoryapp.com" &&
 		location.pathname == "/redirect"
