@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PriceHistory Redirect Button
 // @namespace    https://amo.fyi
-// @version      1.1
+// @version      1.2
 // @description  Show PriceHistory Redirect (New Tab) Button on Amazon, Flipkart, etc
 // @author       Amith M
 // @match        https://www.amazon.in/*
@@ -54,12 +54,11 @@
 	 */
 	const AZ = {
 		code: "AZ",
-		// PriceBox Inside add to cart box, not always available
-		// CSSSelectorContainer:
-		// 	"#addToCart #corePrice_feature_div .a-section .a-price",
-		// PriceBox
-		CSSSelectorContainer:
-			"#apex_desktop #corePriceDisplay_desktop_feature_div .a-section .a-price",
+		// "#addToCart #corePrice_feature_div .a-section .a-price",
+		// ==> PriceBox Inside add to cart box, not always available
+		// "#apex_desktop #corePriceDisplay_desktop_feature_div .a-section .a-price",
+		// ==> Price box in the center, sub classes change sometimes
+		CSSSelectorContainer: "#apex_desktop",
 		HTMLStringBtnToPH: `
 			<span id="${redirectBtnID}" class="a-button a-padding-mini">
 				<p class="" style="font-size: 0.5em;">History</p>
@@ -68,8 +67,8 @@
 		HTMLStringAnchorToPH: `
 			<a id="${redirectBtnID}" class="a-button a-padding-mini"
 				href="" target="_blank" rel="noreferrer" rel="noopener"
-				style="border: 2px solid yellowgreen; border-radius: 1em;">
-				<p class="" style="font-size: 0.5em;">History</p>
+				style="border: 2px solid yellowgreen; border-radius: 1em; margin: 1em; float: left;">
+				<p class="" style="font-size: 1em;">Price History</p>
 			</a>
 			`,
 	};
@@ -90,7 +89,7 @@
 			<a id="${redirectBtnID}" class=""
 				href=""  target="_blank" rel="noreferrer" rel="noopener"
 				style="padding: 0.3em .3em;font-size: 1.9em;margin: 0 1em; border: 2px solid yellowgreen; border-radius: 1em;">
-				<p class="" style="font-size: 0.5em;">History</p>
+				<p class="" style="font-size: 0.5em;color: #2874f0;font-weight: 500;">Price History</p>
 			</a>
 			`,
 	};
@@ -119,6 +118,11 @@
 						: "")
 			);
 		console.log(URLStringPHRedirect);
+
+		// Avoid duplicates
+		document.getElementById(redirectBtnID)
+			? document.getElementById(redirectBtnID).remove()
+			: null;
 
 		// (site.code == "FK"
 		// 	? HTMLElementContainer.parentElement.parentElement
