@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PriceHistory Redirect Button
 // @namespace    https://amo.fyi
-// @version      1.2
+// @version      1.3
 // @description  Show PriceHistory Redirect (New Tab) Button on Amazon, Flipkart, etc
 // @author       Amith M
 // @match        https://www.amazon.in/*
@@ -183,8 +183,31 @@
 		document.querySelector(PH_CSSSelectorBtnSearch).click();
 	};
 
+	let openWLItemsInNewTab = () => {
+		document
+			.querySelectorAll(
+				"#wl-item-view #item-page-wrapper #g-items a[id^='itemName_']"
+			)
+			.forEach((ele) => {
+				ele.target = "_blank";
+			});
+
+		const observer = new MutationObserver((mutations) => {
+			observer.disconnect();
+			openWLItemsInNewTab();
+		});
+		observer.observe(document.querySelector("#wl-item-view"), {
+			childList: true,
+			subtree: true,
+		});
+	};
+
 	if (location.hostname == "www.amazon.in") {
-		addRedirectBtnToSite(AZ);
+		if (location.pathname.startsWith("/hz/wishlist/ls/")) {
+			openWLItemsInNewTab();
+		} else {
+			addRedirectBtnToSite(AZ);
+		}
 	} else if (location.hostname == "www.flipkart.com") {
 		addRedirectBtnToSite(FK);
 	} else if (
