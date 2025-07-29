@@ -5,6 +5,8 @@
 // @description  Adds a Search field for YouTube Video's Save To playlists.
 // @author       Amith M
 // @match        *://www.youtube.com/*
+// @updateURL    https://raw.githubusercontent.com/amithm7/userscripts/refs/heads/main/yt-video-save-to-playlist-search.user.js
+// @downloadURL  https://raw.githubusercontent.com/amithm7/userscripts/refs/heads/main/yt-video-save-to-playlist-search.user.js
 // ==/UserScript==
 
 "use strict";

@@ -5,6 +5,8 @@
 // @description  Adds favicons from DDG to posts on Hacker News
 // @author       Amith M
 // @match        https://*.ycombinator.com/*
+// @updateURL    https://raw.githubusercontent.com/amithm7/userscripts/refs/heads/main/hn-post-favicon.user.js
+// @downloadURL  https://raw.githubusercontent.com/amithm7/userscripts/refs/heads/main/hn-post-favicon.user.js
 // ==/UserScript==
 
 const links = document.querySelectorAll('.titleline > a');

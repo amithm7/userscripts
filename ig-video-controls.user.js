@@ -7,6 +7,8 @@
 // @match        https://www.instagram.com/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=instagram.com
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/amithm7/userscripts/refs/heads/main/ig-video-controls.user.js
+// @downloadURL  https://raw.githubusercontent.com/amithm7/userscripts/refs/heads/main/ig-video-controls.user.js
 // ==/UserScript==
 
 // TODO: Consider post pages `/p/*`
