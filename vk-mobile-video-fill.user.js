@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VK Mobile Video player fill
 // @namespace    https://amo.fyi
-// @version      1.1
+// @version      1.2
 // @description  Expands video player to fill screen space
 // @author       Amith M
 // @match        https://m.vk.com/*
@@ -31,7 +31,7 @@
             const videoElement = document.querySelector(".VideoPage__playerContainer vk-video-player");
             if (videoElement) {
                 handleVideoPlayer(videoElement);
-                obs.disconnect(); // Stop observing once the element is found
+                // obs.disconnect(); // Stop observing once the element is found, if a new video player is not loaded later
             }
         });
 
