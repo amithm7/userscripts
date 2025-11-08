@@ -24,6 +24,7 @@
         console.log('Video player found:', videoElement);
         videoElement.style.maxHeight = "calc(100vh - (65px * 2))";
         videoElement.parentElement.style.removeProperty("padding-bottom");
+        document.querySelector(".VideoPage__playerContainer").style.paddingBottom = "53%";
     }
 
     (function observeDOM() {
