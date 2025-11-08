@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VK Mobile Video player fill
 // @namespace    https://amo.fyi
-// @version      1.2
+// @version      1.3
 // @description  Expands video player to fill screen space
 // @author       Amith M
 // @match        https://m.vk.com/*
