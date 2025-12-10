@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PriceHistory Redirect Button
 // @namespace    https://amo.fyi
-// @version      1.3
+// @version      1.4
 // @description  Show PriceHistory Redirect (New Tab) Button on Amazon, Flipkart, etc
 // @author       Amith M
 // @match        https://www.amazon.in/*
@@ -37,6 +37,26 @@
 		}
 		return query;
 	};
+
+	function setReactInputValue(input, value) {
+		const lastValue = input.value;
+
+		// 1. Set via native setter
+		const nativeSetter = Object.getOwnPropertyDescriptor(
+			input.__proto__,
+			"value"
+		).set;
+
+		nativeSetter.call(input, value);
+
+		// 2. Update React's internal tracker
+		if (input._valueTracker) {
+			input._valueTracker.setValue(lastValue);
+		}
+
+		// 3. Dispatch input event
+		input.dispatchEvent(new Event("input", { bubbles: true }));
+	}
 
 	//#endregion helper-functions ----------------------------------------------
 
@@ -167,22 +187,29 @@
 			PH_CSSSelectorInSearch
 		);
 
-		console.log("input URL");
-
+		// setTimeout(() => {
 		// window.focus();
-		// priceHistorySearchIn.focus();
+		// PH_HTMLElementInputSearch.focus();
 		// document.querySelector("nav input").value="https://www.amazon.in/dp/B08V98F518/";
-		PH_HTMLElementInputSearch.value = productURL;
-		// priceHistorySearchIn.click();
+		// PH_HTMLElementInputSearch.value = productURL;
+		// PH_HTMLElementInputSearch.click();
 
-		PH_HTMLElementInputSearch.dispatchEvent(
-			new Event("input", {
-				bubbles: true,
-				cancelable: true,
-			})
-		);
+		// PH_HTMLElementInputSearch.dispatchEvent(
+		//     new Event("input", {
+		//         bubbles: true,
+		//         cancelable: true,
+		//     })
+		// );
+		// PH_HTMLElementInputSearch.dispatchEvent(new Event("change", { bubbles: true }));
+
+		console.log("productURL =", productURL, typeof productURL);
+
+		// FIXME: Using variable directly doesn't work
+		setReactInputValue(PH_HTMLElementInputSearch, "example");
+		setReactInputValue(PH_HTMLElementInputSearch, productURL);
 
 		document.querySelector(PH_CSSSelectorBtnSearch).click();
+		// }, 100);
 	};
 
 	let openWLItemsInNewTab = () => {
