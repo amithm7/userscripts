@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         VK Mobile Video player fill
 // @namespace    https://amo.fyi
-// @version      1.3
+// @version      1.4
 // @description  Expands video player to fill screen space
 // @author       Amith M
-// @match        https://m.vk.com/*
-// @match        https://m.vkvideo.ru/*
+// @match        https://*.m.vk.com/*
+// @match        https://*.m.vkvideo.ru/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=vk.com
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/amithm7/userscripts/refs/heads/main/vk-mobile-video-fill.user.js
