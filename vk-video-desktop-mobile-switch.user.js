@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VK Video Mobile / Desktop Switch Button
 // @namespace    https://amo.fyi
-// @version      1.2
+// @version      1.3
 // @description  Add switch buttons on vk.com video pages to redirect between mobile / desktop
 // @author       Amith M
 // @match        https://*.vk.com/video*
@@ -16,7 +16,7 @@
 	"use strict";
 
 	const desktopShareMenuSelector = ".vkitPostFooter__root--J16mh"; // ".videoplayer_share_actions";
-	const mobileShareMenuSelector = ".VideoPageCardActions__root--QTleF"; // ".VideoPageCardActions__root--nKtyl" ".VideoPageCardActions-module__root--ClPQo"
+	const mobileShareMenuSelector = ".VideoPageCardActions__root--QTleF"; // "--nKtyl" ".VideoPageCardActions-module__root--ClPQo"
 
 	// TODO: Display notifications on these below actiivites.
 	// TODO: Automatic redirect to mobile if video doesn't play in 10s ?
@@ -45,8 +45,7 @@
     </div>
     `;
 
-	let getURLWithoutProtocol = (URL) =>
-		URL.slice(location.href.indexOf("://") + 3);
+	// let getURLWithoutProtocol = (URL) => URL.slice(URL.indexOf("://") + 3);
 
 	let scheduleCheckAgain = () => {
 		checkRetries++;
@@ -58,12 +57,27 @@
 	};
 
 	let runCheck = () => {
-		console.log("checking video");
+		const host = location.hostname;
+		const path = location.pathname + location.search + location.hash;
+		const hostParts = host.split(".");
+
+		console.log("checking video player type...");
 		if (document.querySelector(desktopShareMenuSelector)) {
 			// Desktop Video Player Loaded
-			const mobileURL =
-				"https://m." + getURLWithoutProtocol(location.href);
+			let mobileHost = "";
+			if (hostParts.length >= 2) {
+				mobileHost =
+					hostParts.slice(0, hostParts.length - 2).join(".") +
+					(hostParts.length > 2 ? "." : "") +
+					"m." +
+					hostParts.slice(hostParts.length - 2).join(".");
+			} else {
+				mobileHost = "m." + host;
+			}
+
+			const mobileURL = `${location.protocol}//${mobileHost}${path}`;
 			console.log(mobileURL);
+
 			const desktopShareMenuEle = document.querySelector(
 				desktopShareMenuSelector
 			);
@@ -77,11 +91,22 @@
 			};
 		} else if (document.querySelector(mobileShareMenuSelector)) {
 			// Mobile Video Player Loaded
-			const desktopURL =
-				"https://" +
-				getURLWithoutProtocol(location.href).slice(2) +
-				"#"; // remove "m."
+			let desktopHost = "";
+			if (hostParts.length >= 2) {
+				desktopHost = hostParts.reduce((acc, part, index) => {
+					// Skip "m." part
+					if (part === "m" && index === hostParts.length - 3)
+						return acc;
+					acc += (acc ? "." : "") + part;
+					return acc;
+				}, "");
+			} else {
+				desktopHost = host;
+			}
+
+			const desktopURL = `${location.protocol}//${desktopHost}${path}`;
 			console.log(desktopURL);
+
 			const anchor = document.createElement("a");
 			anchor.href = desktopURL;
 			anchor.innerHTML += toDesktop;
