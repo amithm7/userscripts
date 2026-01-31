@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VK Video Mobile / Desktop Switch Button
 // @namespace    https://amo.fyi
-// @version      1.3
+// @version      1.4
 // @description  Add switch buttons on vk.com video pages to redirect between mobile / desktop
 // @author       Amith M
 // @match        https://*.vk.com/video*
