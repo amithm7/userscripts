@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VK Video Mobile / Desktop Switch Button
 // @namespace    https://amo.fyi
-// @version      1.4
+// @version      1.5
 // @description  Add switch buttons on vk.com video pages to redirect between mobile / desktop
 // @author       Amith M
 // @match        https://*.vk.com/video*
@@ -15,8 +15,8 @@
 (function () {
 	"use strict";
 
-	const desktopShareMenuSelector = ".vkitPostFooter__root--Pvcve"; // J16mh // ".videoplayer_share_actions";
-	const mobileShareMenuSelector = ".VideoPageCardActions__root--EOjur"; // QTleF // "nKtyl" // ".VideoPageCardActions-module__root--ClPQo"
+	const desktopShareMenuSelector = "div[class*=\"vkitPostFooter__root\"]"; // ".videoplayer_share_actions";
+	const mobileShareMenuSelector = "div[class*=\"VideoPageCardActions__root\"]"; // ".VideoPageCardActions-module__root--ClPQo"
 
 	// TODO: Display notifications on these below actiivites.
 	// TODO: Automatic redirect to mobile if video doesn't play in 10s ?
