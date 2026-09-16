@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VK Mobile Video player fill
 // @namespace    https://amo.fyi
-// @version      1.4
+// @version      1.5
 // @description  Expands video player to fill screen space
 // @author       Amith M
 // @match        https://*.m.vk.com/*
@@ -24,13 +24,16 @@
         console.log('Video player found:', videoElement);
         videoElement.style.maxHeight = "calc(100vh - (65px * 2))";
         videoElement.parentElement.style.removeProperty("padding-bottom");
-        document.querySelector(".VideoPage__playerContainer").style.paddingBottom = "53%";
+        document.querySelector("#mvk-video-page-root-container").style.removeProperty("max-width");
+        document.querySelector("#video-player-wrapper-mvk-showcase").style.paddingBottom = "53%";
     }
 
     (function observeDOM() {
         const observer = new MutationObserver((mutations, obs) => {
-            const videoElement = document.querySelector(".VideoPage__playerContainer vk-video-player");
+            const videoElement = document.querySelector("vk-video-player");
+
             if (videoElement) {
+                console.log('Video player found **********************');
                 handleVideoPlayer(videoElement);
                 // obs.disconnect(); // Stop observing once the element is found, if a new video player is not loaded later
             }
